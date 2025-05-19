@@ -29,6 +29,8 @@ Bob Johnson
 ```
 
 
+
+
 #### Output of 'SimpleAPIClient.cs' should be:
 
 Attempting to fetch data from: https://jsonplaceholder.typicode.com/todos/1
@@ -42,9 +44,10 @@ Attempting to fetch data from: https://jsonplaceholder.typicode.com/todos/1
 }
 --- End of Response ---
 
-Successfully fetched and displayed data.```
+Successfully fetched and displayed data.
 
 API call attempt finished.
+```
 
 
 (If there's a network issue (e.g., no internet connection) or the API is down, the output will show an error message from the catch block, for example:)
