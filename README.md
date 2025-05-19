@@ -25,7 +25,8 @@ ID: 101, Name: Alice Smith, Department: Engineering, Service Years: 5
 ID: 103, Name: Charlie Williams, Department: Engineering, Service Years: 8
 
 --- Names of all employees in Marketing ---
-Bob Johnson```
+Bob Johnson
+```
 
 
 #### Output of 'SimpleAPIClient.cs' should be:
@@ -53,4 +54,5 @@ API call attempt finished.
 --- Error ---
 Request error: No such host is known. (jsonplaceholder.typicode.com:443) // (Error message might vary)
 
-API call attempt finished.```
+API call attempt finished.
+```
