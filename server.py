@@ -96,9 +96,9 @@ def execute_code(code_path: str):
         subprocess.run(compile_command, check=True)
         command = execute_command
     elif file_extension == ".cs":
-        # Compile and execute C# file
-        compile_command = ["csc", code_path]
-        execute_command = ["mono", os.path.splitext(code_file_name)[0] + ".exe"]
+        project_dir = os.path.dirname(code_path)
+        compile_command = ["dotnet", "build", project_dir]
+        execute_command = ["dotnet", "run", "--project", project_dir]
         subprocess.run(compile_command, check=True)
         command = execute_command
     elif file_extension == ".c":
@@ -165,9 +165,6 @@ def run_code(code_name: str) -> dict:
     
     return result
 
-@mcp.tool()
-def hello(name: str) -> str:
-    return f"Hello, {name}!"
 
 if __name__ == "__main__":
-    mcp.run(transport="sse", host="127.0.0.1", port=8000)
+    mcp.run() 
