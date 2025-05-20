@@ -1,0 +1,15 @@
+/Users/chaeeunryu/Desktop/MCP Study/YourMCPCodingMaster/example_codes/obj/Debug/net9.0/EmployeeDirectory.GeneratedMSBuildEditorConfig.editorconfig
+/Users/chaeeunryu/Desktop/MCP Study/YourMCPCodingMaster/example_codes/obj/Debug/net9.0/EmployeeDirectory.AssemblyInfoInputs.cache
+/Users/chaeeunryu/Desktop/MCP Study/YourMCPCodingMaster/example_codes/obj/Debug/net9.0/EmployeeDirectory.AssemblyInfo.cs
+/Users/chaeeunryu/Desktop/MCP Study/YourMCPCodingMaster/example_codes/obj/Debug/net9.0/EmployeeDirectory.csproj.CoreCompileInputs.cache
+/Users/chaeeunryu/Desktop/MCP Study/YourMCPCodingMaster/example_codes/obj/Debug/net9.0/EmployeeDirectory.sourcelink.json
+/Users/chaeeunryu/Desktop/MCP Study/YourMCPCodingMaster/example_codes/bin/Debug/net9.0/EmployeeDirectory
+/Users/chaeeunryu/Desktop/MCP Study/YourMCPCodingMaster/example_codes/bin/Debug/net9.0/EmployeeDirectory.deps.json
+/Users/chaeeunryu/Desktop/MCP Study/YourMCPCodingMaster/example_codes/bin/Debug/net9.0/EmployeeDirectory.runtimeconfig.json
+/Users/chaeeunryu/Desktop/MCP Study/YourMCPCodingMaster/example_codes/bin/Debug/net9.0/EmployeeDirectory.dll
+/Users/chaeeunryu/Desktop/MCP Study/YourMCPCodingMaster/example_codes/bin/Debug/net9.0/EmployeeDirectory.pdb
+/Users/chaeeunryu/Desktop/MCP Study/YourMCPCodingMaster/example_codes/obj/Debug/net9.0/EmployeeDirectory.dll
+/Users/chaeeunryu/Desktop/MCP Study/YourMCPCodingMaster/example_codes/obj/Debug/net9.0/refint/EmployeeDirectory.dll
+/Users/chaeeunryu/Desktop/MCP Study/YourMCPCodingMaster/example_codes/obj/Debug/net9.0/EmployeeDirectory.pdb
+/Users/chaeeunryu/Desktop/MCP Study/YourMCPCodingMaster/example_codes/obj/Debug/net9.0/EmployeeDirectory.genruntimeconfig.cache
+/Users/chaeeunryu/Desktop/MCP Study/YourMCPCodingMaster/example_codes/obj/Debug/net9.0/ref/EmployeeDirectory.dll
