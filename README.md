@@ -12,8 +12,8 @@ Your Coding Master MCP Server that
 
 | Tool Name  | Category |
 | ------------- | ------------- |
-| list_codes  | Common  |
-| run_code  | Debugging  |
+| '''list_codes'''  | Common  |
+| '''run_code'''  | Debugging  |
 
 # Debugging
 
