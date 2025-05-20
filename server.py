@@ -85,48 +85,55 @@ def execute_code(code_path: str):
     # Get the file extension
     _, file_extension = os.path.splitext(code_path)
     
-    # Determine the command to execute based on the file extension
-    if file_extension == ".py":
-        # Execute Python file
-        command = ["python3", code_path]
-    elif file_extension == ".java":
-        # Compile and execute Java file
-        compile_command = ["javac", code_path]
-        execute_command = ["java", os.path.splitext(code_file_name)[0]]
-        subprocess.run(compile_command, check=True)
-        command = execute_command
-    elif file_extension == ".cs":
-        project_dir = os.path.dirname(code_path)
-        compile_command = ["dotnet", "build", project_dir]
-        execute_command = ["dotnet", "run", "--project", project_dir]
-        subprocess.run(compile_command, check=True)
-        command = execute_command
-    elif file_extension == ".c":
-        # Compile and execute C file
-        executable = os.path.splitext(code_file_name)[0]
-        compile_command = ["gcc", code_path, "-o", executable]
-        subprocess.run(compile_command, check=True)
-        command = [f"./{executable}"]
-    elif file_extension in [".cpp", ".c++", ".cc"]:
-        # Compile and execute C++ file
-        executable = os.path.splitext(code_file_name)[0]
-        compile_command = ["g++", code_path, "-o", executable]
-        subprocess.run(compile_command, check=True)
-        command = [f"./{executable}"]
-    else:
-        raise ValueError(f"Unsupported file extension: {file_extension}")
+    try:
+        # Determine the command to execute based on the file extension
+        if file_extension == ".py":
+            # Execute Python file
+            command = ["python3", code_path]
+        elif file_extension == ".java":
+            # Compile and execute Java file
+            compile_command = ["javac", code_path]
+            execute_command = ["java", os.path.splitext(code_file_name)[0]]
+            subprocess.run(compile_command, check=True)
+            command = execute_command
+        elif file_extension == ".cs":
+            compile_command = ["csc", code_path]
+            execute_command = ["mono", os.path.splitext(code_file_name)[0] + ".exe"]
+            subprocess.run(compile_command, check=True)
+            command = execute_command
+        elif file_extension == ".c":
+            # Compile and execute C file
+            executable = os.path.splitext(code_file_name)[0]
+            compile_command = ["gcc", code_path, "-o", executable]
+            subprocess.run(compile_command, check=True)
+            command = [f"./{executable}"]
+        elif file_extension in [".cpp", ".c++", ".cc"]:
+            # Compile and execute C++ file
+            executable = os.path.splitext(code_file_name)[0]
+            compile_command = ["g++", code_path, "-o", executable]
+            subprocess.run(compile_command, check=True)
+            command = [f"./{executable}"]
+        else:
+            raise ValueError(f"Unsupported file extension: {file_extension}")
+            
+        # Execute the command and capture the output
+        result = subprocess.run(command, capture_output=True, text=True)
+        output = result.stdout if result.returncode == 0 else result.stderr
         
-    # Execute the command and capture the output
-    result = subprocess.run(command, capture_output=True, text=True)
-    output = result.stdout if result.returncode == 0 else result.stderr
-    
-    # Return the dictionary
-    return {
-        "code": code,
-        "output": output,
-        "code_file_name": code_file_name
-    }
-
+        # Return the dictionary
+        return {
+            "code": code,
+            "output": output,
+            "code_file_name": code_file_name
+        }
+    except subprocess.CalledProcessError as e:
+        # Handle errors during execution
+        return {
+            "code": code,
+            "output": e.stderr,
+            "code_file_name": code_file_name
+        }
+        
 @mcp.tool()
 def list_codes(directory: str = CODE_STORAGE) -> List[str]:
     """
@@ -161,8 +168,16 @@ def run_code(code_name: str) -> dict:
     code_path = get_code_path(code_name)
     
     # Execute the code and get the output
-    result = execute_code(code_path)
-    
+    try:
+        result = execute_code(code_path)
+    except Exception as e:
+        print("Error executing code:", e)
+        content = get_code(code_path)
+        result = {
+            "code": content,
+            "output": str(e),
+            "code_file_name": os.path.basename(code_path)
+        }
     return result
 
 
