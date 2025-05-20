@@ -41,9 +41,10 @@ Bob Johnson
 
 #### Output of 'SimpleAPIClient.cs' should be:
 
-Attempting to fetch data from: https://jsonplaceholder.typicode.com/todos/1
 
-```--- API Response ---
+
+```Attempting to fetch data from: https://jsonplaceholder.typicode.com/todos/1
+--- API Response ---
 {
   "userId": 1,
   "id": 1,
