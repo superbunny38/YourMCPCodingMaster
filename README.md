@@ -8,6 +8,14 @@ Your Coding Master MCP Server that
 - codes
 - helps you with code-related error!
 
+# Available Tools
+
+| Tool Name  | Category |
+| ------------- | ------------- |
+| list_codes  | Common  |
+| run_code  | Debugging  |
+
+# Debugging
 
 ## Example usage
 
