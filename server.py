@@ -312,7 +312,40 @@ def run_code(code_name: str) -> dict:
             "return_code": -1
         }
 
+@mcp.tool()
+async def get_context_of_the_coder(coder_name: str, ctx: Context) -> dict:
+    """
+    Get the context of the current coder
+    """
+    
+    return {"coder_name": coder_name, "workspace_dir": WORKSPACE_DIR, "code_storage_dir":CODE_STORAGE,"accessed_at": ctx.request_id}
+    
+    
+@mcp.resource("resource://{user_name}/details")
+async def get_details(user_name: str, ctx: Context):
+    """Get details for the user"""
+    return {
+        "user_name": user_name,
+        "workspace_dir": WORKSPACE_DIR,
+        "accessed_at": ctx.request_id
+    }
 
+
+
+
+@mcp.resource("birthdays://{user_name}/family")
+async def get_birthday(user_name: str, ctx:Context) -> dict:
+    """Get birthday details for the user"""
+    return {
+        "user_name": user_name,
+        "birthdays": {
+            "mother": "March 7",
+            "father": "September 8",
+            "sibling": "March 1",
+            "mongee": "April 14"
+        }
+    }
+    
 
 if __name__ == "__main__":
     mcp.run() 
