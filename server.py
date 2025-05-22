@@ -313,14 +313,17 @@ def run_code(code_name: str) -> dict:
         }
 
 #resource about the code writer of the Coding Master MCP server
-@mcp.resource("config://codewriter")
-def get_code_writer_profile():
+@mcp.resource(uri = "config://codewriter", name= "Code Writer Info", description= "Information about the code writer.")
+def get_code_writer_profile(ctx: Context) -> dict:
     # Fetch the code writer profile
     profile = {
         "name": "Chaeeun Ryu",
         "linkedin": "https://www.linkedin.com/in/chaeeun-ryu-a39a82234/",
+        "version": mcp.settings.version,
+        "accessed at": ctx.request_id
     }
     return profile
+
 
 
 if __name__ == "__main__":
