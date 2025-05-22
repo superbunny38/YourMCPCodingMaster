@@ -5,6 +5,8 @@ from pathlib import Path
 from typing import List
 import subprocess
 import platform 
+import requests
+import json
 
 WORKSPACE_DIR = os.getcwd()
 CODE_STORAGE = os.path.join(WORKSPACE_DIR, "example_codes")
@@ -232,7 +234,71 @@ def execute_code(code_path: str):
         print(error_msg)
         return {"code": code_content, "output": error_msg, "code_file_name": code_file_name, "return_code": -1}
 
+@mcp.tool()
+async def fetch_and_save_tool_info(ctx: Context, url: str = "https://gofastmcp.com/servers/tools", output_file: str = "tool_info.json"):
+    """
+    Fetch all information from the given URL and save it to a file.
 
+    Args:
+        url (str): The URL to fetch the data from.
+        output_file (str): The name of the file to save the data to.
+        
+    """
+    output_file = os.path.join(CODE_STORAGE, output_file)
+    try:
+        # Fetch data from the URL
+        response = await requests.get(url)
+        response.raise_for_status()  # Raise an error for HTTP issues
+        
+        # Parse the response content (assuming it's JSON)
+        data = await response.json()
+        
+        # Save the data to a file
+        with open(output_file, "w") as file:
+            json.dump(data, file, indent=4)
+        
+        response = await ctx.sample(
+            messages=f"Read the following data about writing tools for the mcp server: {data}",
+            system_prompt="You are an expert Python programmer developing MCP Server. Provide concise, working code examples without explanations.",
+            temperature=0.7,
+            max_tokens=300
+        )
+        
+        print(f"Tool information successfully saved to '{output_file}'.")
+    except requests.exceptions.RequestException as e:
+        print(f"Error fetching data from {url}: {e}")
+    except json.JSONDecodeError:
+        print("Error decoding the response as JSON.")
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}")
+
+#resource about the code writer of the Coding Master MCP server
+@mcp.resource(uri = "config://codewriter", name= "Code Writer Info", description= "Information about the code writer.")
+def get_code_writer_profile(ctx: Context) -> dict:
+    # Fetch the code writer profile
+    profile = {
+        "name": "Chaeeun Ryu",
+        "linkedin": "https://www.linkedin.com/in/chaeeun-ryu-a39a82234/",
+        "version": mcp.settings.version,
+        "accessed at": ctx.request_id
+    }
+    return profile
+
+
+
+
+@mcp.tool()
+def write_me_a_mcp_tool(conecept: str, ctx: Context) -> str:
+    
+    if os.path.exists(os.path.join(CODE_STORAGE, "tool_info.json")):
+        pass
+    else:
+        "Fetching the data from the URL and saving it to a file for the tools document."
+        fetch_and_save_tool_info()    
+        
+        return write_me_a_mcp_tool(ctx)
+    
+    return
         
 @mcp.tool()
 def list_codes(directory: str = CODE_STORAGE) -> List[str]:
@@ -312,17 +378,7 @@ def run_code(code_name: str) -> dict:
             "return_code": -1
         }
 
-#resource about the code writer of the Coding Master MCP server
-@mcp.resource(uri = "config://codewriter", name= "Code Writer Info", description= "Information about the code writer.")
-def get_code_writer_profile(ctx: Context) -> dict:
-    # Fetch the code writer profile
-    profile = {
-        "name": "Chaeeun Ryu",
-        "linkedin": "https://www.linkedin.com/in/chaeeun-ryu-a39a82234/",
-        "version": mcp.settings.version,
-        "accessed at": ctx.request_id
-    }
-    return profile
+
 
 
 
