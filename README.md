@@ -14,6 +14,7 @@ Your Coding Master MCP Server that
 | ------------- | ------------- |
 | `list_codes`  | Common  |
 | `run_code`  | Debugging  |
+| `get_code`  | Common  |
 
 # Debugging
 
