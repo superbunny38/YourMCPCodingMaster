@@ -169,9 +169,5 @@ def run_code(code_name: str) -> dict:
             "return_code": -1
         }
 
-
-
-
-
 if __name__ == "__main__":
-    mcp.run() 
+    mcp.run(transport='sse')
