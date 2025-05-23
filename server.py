@@ -1,13 +1,10 @@
 import os
-import glob
 from fastmcp import FastMCP, Context
-from pathlib import Path
 from typing import List
-import subprocess
-import platform 
-import requests
+import httpx
 import json
-from utils import *
+import asyncio
+from utils import get_code_path, get_code, get_all_code_paths, execute_code
 
 WORKSPACE_DIR = os.getcwd()
 CODE_STORAGE = os.path.join(WORKSPACE_DIR, "example_codes")
@@ -23,35 +20,29 @@ async def fetch_and_save_tool_info(ctx: Context, url: str = "https://gofastmcp.c
     Args:
         url (str): The URL to fetch the data from.
         output_file (str): The name of the file to save the data to.
-        
     """
     output_file = os.path.join(CODE_STORAGE, output_file)
     try:
         # Fetch data from the URL
-        response = await requests.get(url)
-        response.raise_for_status()  # Raise an error for HTTP issues
+        async with httpx.AsyncClient() as client:
+            response = await client.get(url)
+            response.raise_for_status()  # Raise an error for HTTP issues
         
         # Parse the response content (assuming it's JSON)
-        data = await response.json()
+        data = response.json()
         
         # Save the data to a file
         with open(output_file, "w") as file:
             json.dump(data, file, indent=4)
         
-        response = await ctx.sample(
-            messages=f"Read the following data about writing tools for the mcp server: {data}",
-            system_prompt="You are an expert Python programmer developing MCP Server. Provide concise, working code examples without explanations.",
-            temperature=0.7,
-            max_tokens=300
-        )
-        
         print(f"Tool information successfully saved to '{output_file}'.")
-    except requests.exceptions.RequestException as e:
+    except httpx.RequestError as e:
         print(f"Error fetching data from {url}: {e}")
     except json.JSONDecodeError:
         print("Error decoding the response as JSON.")
     except Exception as e:
         print(f"An unexpected error occurred: {e}")
+        
 
 #resource about the code writer of the Coding Master MCP server
 @mcp.resource(uri = "config://codewriter", name= "Code Writer Info", description= "Information about the code writer.")
@@ -66,20 +57,24 @@ def get_code_writer_profile(ctx: Context) -> dict:
     return profile
 
 
-
-
 @mcp.tool()
-def write_me_a_mcp_tool(conecept: str, ctx: Context) -> str:
+def write_me_a_mcp_tool(concept: str, ctx: Context) -> str:
+    """
+    Write an MCP tool based on the concept provided.
+    """
+    tool_info_path = os.path.join(CODE_STORAGE, "tool_info.json")
     
-    if os.path.exists(os.path.join(CODE_STORAGE, "tool_info.json")):
-        pass
-    else:
-        "Fetching the data from the URL and saving it to a file for the tools document."
-        fetch_and_save_tool_info()    
-        
-        return write_me_a_mcp_tool(ctx)
+    if not os.path.exists(tool_info_path):
+        # Fetch the data from the URL and save it to a file for the tools document
+        asyncio.run(fetch_and_save_tool_info(ctx))
     
-    return
+    # Read the tool info file
+    with open(tool_info_path, "r") as file:
+        tool_info = json.load(file)
+    
+    # Generate the tool based on the concept
+    return f"Tool generated for concept: {concept}. Tool info: {tool_info}"
+
         
 @mcp.tool()
 def list_codes(directory: str = CODE_STORAGE) -> List[str]:
