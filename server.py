@@ -36,6 +36,17 @@ async def fetch_and_save_tool_info(ctx: Context, url: str = "https://gofastmcp.c
             json.dump(data, file, indent=4)
         
         print(f"Tool information successfully saved to '{output_file}'.")
+        
+        print("Reading the tool documentation...")
+        
+        content_list = await ctx.read_resource(output_file)
+        
+        if not content_list:
+            return "Document is empty"
+        else:
+            return "Document read!"
+        
+        
     except httpx.RequestError as e:
         print(f"Error fetching data from {url}: {e}")
     except json.JSONDecodeError:
@@ -58,22 +69,26 @@ def get_code_writer_profile(ctx: Context) -> dict:
 
 
 @mcp.tool()
-def write_me_a_mcp_tool(concept: str, ctx: Context) -> str:
+async def write_me_a_mcp_tool(tool_desc: str, ctx: Context) -> str:
     """
-    Write an MCP tool based on the concept provided.
+    Write an MCP tool based on the tool description provided.
     """
     tool_info_path = os.path.join(CODE_STORAGE, "tool_info.json")
     
     if not os.path.exists(tool_info_path):
         # Fetch the data from the URL and save it to a file for the tools document
-        asyncio.run(fetch_and_save_tool_info(ctx))
+        await fetch_and_save_tool_info(ctx)
     
     # Read the tool info file
     with open(tool_info_path, "r") as file:
         tool_info = json.load(file)
     
     # Generate the tool based on the concept
-    return f"Tool generated for concept: {concept}. Tool info: {tool_info}"
+    prompt = f"Generate a tool for the description: {tool_desc}. The tool should be based on the following information: {tool_info}"
+    
+    response = await ctx.sample(prompt, model_preferences="claude-3-sonnet")
+    
+    return response
 
         
 @mcp.tool()
